@@ -13,10 +13,7 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-## R Markdown
-
-I couldn't upload the CMS database to Github because its too big. Here is the source link: https://www.cms.gov/Medicare/Provider-Enrollment-and-Certification/CertificationandComplianc/Hospitals
+Here is the source link: https://www.cms.gov/Medicare/Provider-Enrollment-and-Certification/CertificationandComplianc/Hospitals
 
 There are 1,326 critical access hospitals with emergency departments.
 There are 2,956 Acute Care Hospitals with emergency departments. The rest (1,025 hospitals) are hospitals without emergency departments,
