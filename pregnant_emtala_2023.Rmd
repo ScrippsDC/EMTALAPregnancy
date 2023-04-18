@@ -14,20 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## R Markdown
 
-I couldn't upload the CMS database to Github because its too big. Here is the source link: https://www.cms.gov/Medicare/Provider-Enrollment-and-Certification/CertificationandComplianc/Hospitals
-
-There are 1,326 critical access hospitals with emergency departments.
-There are 2,956 Acute Care Hospitals with emergency departments. The rest (1,025 hospitals) are hospitals without emergency departments,
-psychiatric hospitals and department of defense hospitals.
-<https://data.cms.gov/provider-data/dataset/xubh-q36u>
-
-Keep in mind: many hospitals are private and do not accept Medicaid.
-There are 786 hospitals across the US that do not accept Medicaid therefore are not subject to EMTALA.
-<https://www.cms.gov/Medicare/Provider-Enrollment-and-Certification/CertificationandComplianc/Hospitals>
-
-The purpose of this markdown is to analyze CMS Hospital Survey Deficiencies for specific reproductive-language words. I will create a database for all the keyword searches.
-
-
+The purpose of this markdown is to analyze CMS Hospital Survey Deficiencies for specific reproductive-language words. Our goal is to capture all EMTALA violations involving pregnant patients. 
 
 ```{r}
 library(tidyverse)
@@ -84,23 +71,7 @@ Lets combine the datasets.
 events_all<- bind_rows(cms_deficiencies1, cms_deficiencies2)
 ```
 
-Since we aren't using data from Psychiatric hospitals, we are going to
-get rid of rows in which "Psychiatric" is present.
-
-```{r}
-events_crit_short <- 
-filter(events_all, hospital_type != "Psychiatric")
-```
-
-```{r}
-emtala_psych_crit_short <- events_all %>%
-  filter(grepl('2400|2401|2402|2403|2404|2405|2406|2407|2408|2409|2410|2411', deficiency_tag))
-
-emtala_psych_crit_short$year <- format(as.Date(emtala_psych_crit_short$inspection_date, format="%Y/%M/%D"),"%Y")
-```
-
-We want to filter for only emtala deficiencies using the following
-emtala deficiency tags:
+We want to filter for only emtala deficiencies using the following emtala deficiency tags:
 
 State Operations Manual Outline of Data Tags Used for Citing Violations
 of Responsibilities of Medicare Participating Hospitals in Emergency
@@ -127,31 +98,33 @@ Here are the specific deficiency tags we are looking for:
 2411
 
 ```{r}
-events_crit_short$key_identifier <-
-  paste(events_crit_short$deficiency_tag, events_crit_short$EVENT_ID)
-```
-
-
-```{r}
-emtala_events_crit_short <- events_crit_short %>%
+emtala_events_psych_crit_short <- events_all %>%
  filter(grepl('2400|2401|2402|2403|2404|2405|2406|2407|2408|2409|2410|2411', deficiency_tag))
 
-emtala_events_crit_short$index <- 1:nrow(emtala_events_crit_short)
+emtala_events_psych_crit_short$index <- 1:nrow(emtala_events_psych_crit_short)
 
-emtala_events_crit_short$year <- format(as.Date(emtala_events_crit_short$inspection_date, format="%Y/%M/%D"),"%Y")
+emtala_events_psych_crit_short$year <- format(as.Date(emtala_events_psych_crit_short$inspection_date, format="%Y/%M/%D"),"%Y")
+
 ```
 
-When we filter out events in psychiatric hospitalsand emtala deficiency
-tags, we are left with 6,477 short term and critical access care
-hospital deficiencies since January 2011.
+```{r}
+emtala_events_psych_crit_short$key_identifier <-
+  paste(emtala_events_psych_crit_short$deficiency_tag, emtala_events_psych_crit_short$EVENT_ID)
+```
 
-Before we start doing our key word search for compelling cases regarding
-pregnant people, many inspection texts cite emtala statutes with the
-words relating to pregnant people but the event id will not have to do
-with a pregnant patient's records. So we want to delete that string of
-words from each inspection text so we can truly search for event ids
-relating to pregnant people.
 
+Since we aren't using data from Psychiatric hospitals, we are going to get rid of rows in which "Psychiatric" is present:
+
+```{r}
+emtala_events_crit_short <- 
+filter(emtala_events_psych_crit_short, hospital_type != "Psychiatric")
+```
+
+When we filter out events in psychiatric hospitals and emtala deficiency tags, we are left with 6,477 short term and critical access care hospital deficiencies since January 2011.
+
+Before we start doing our key word search for compelling cases regarding pregnant people, many inspection texts cite emtala statutes with the words relating to pregnant people but the event_id will not have to do with a pregnant patient's records. So we want to delete that string of words from each inspection text so we can truly search for event ids relating to pregnant people.
+
+Filtering stop words and replacing with blank spaces:
 
 ```{r}
 emtala_events_crit_short$inspection_text2 <- stringi::stri_replace_all_regex(emtala_events_crit_short$inspection_text,
@@ -162,6 +135,7 @@ emtala_events_crit_short$inspection_text2 <- stringi::stri_replace_all_regex(emt
                                   replacement=c('','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',''),vectorize=FALSE)
 ```
 
+Pregnancy Keyword pass:
 ```{r}
 emtala_key_word_deficiencies <- emtala_events_crit_short %>% 
   dplyr::select(facility_name, hospital_type, facility_id, address, city, state, deficiency_tag, dfcncy_desc,inspection_date, EVENT_ID, inspection_text, inspection_text2, index, key_identifier, year) %>% 
@@ -216,7 +190,25 @@ sample4 <- sample_n(emtala_key_word_deficiencies, 20)
 write.csv(sample4, "data/source/sample4.csv")
 ```
 
-Reading in Rosie's database post manual review - 109 of 169 cases 
+
+My editor, Rosie Cima, captured any violations where the following words appeared 100 characters before or 200 characters after the patient identifier:
+
+Phrases
+active labor
+c section
+c-section
+csection
+caeserian
+eclampsia
+gestation
+gravid
+obstetr
+para
+pregnan
+water break
+water broke
+
+Reading in Rosie's database post manual review - 109 of 169 captured cases involve a pregnant patient. 
 ```{r}
 in_rc <- read_csv("data/source/in_rc_emtala.csv")
 
@@ -230,7 +222,7 @@ in_rc$inspection_date <- format(as.Date(in_rc$inspection_date, format="%Y/%M/%D"
 
 ```
 
-##Reading in violations from 2011-Q3 2022 post manual review of inspection_text to determine if violation involved a pregnant patient: 
+##Reading in violations from 2011-Q3 2022 post manual review of inspection_text to determine if violation involved a pregnant patient: This includes Rosie's 109 captured violations 
 ```{r}
 emtala_pregnant <- read_xlsx("data/processed/EMTALA_PREGNANT_2011-2022.xlsx")
 
@@ -239,6 +231,8 @@ emtala_pregnant <- read_xlsx("data/processed/EMTALA_PREGNANT_2011-2022.xlsx")
 emtala_pregnant <-
 filter(emtala_pregnant, EVENT_ID != "PTBH11")
 
+
+#taking out captured cases that do not involve pregnant patients but involve neonates. I decided we should not include these:
 emtala_pregnant <- emtala_pregnant %>%
   filter(!grepl("2409 D6YK11|2409 IT9611|2407 74BC11|2409 VRM911|2409 NZOV11|2406 05FK11|2407 ZY3N11|2406 JOU711|2406 4F4G11|2406 8E2Y11|2409 PKRO11|2407 T0DE11|2406 CITS12|2406 S4NX11|2406 RU2V11|2407 UD9X11|2407 KZUZ11|2406 D9FE11", key_identifier))
          
@@ -249,131 +243,58 @@ emtala_pregnant$year <-
 
 ```
 
-
-##“Even before the fall of Roe, 385 hospitals violated EMTALA while attending to pregnant patients.” (386 hospitals since 2011 but one hospital had a violation after the fall of Roe: 9/2/2022 TAYLORVILLE MEMORIAL HOSPITAL)
+Web: “Our investigation found 386 hospitals spanning 44 states have violated EMTALA statutes while attending to pregnant patients, racking up at least 675 federal violations since 2011.” 
+ 
+Script: “OUR SCRIPPS NEWS INVESTIGATION FOUND IT IS AMONG 386 HOSPITALS (FC) AROUND THE COUNTRY REPONSIBLE FOR NEARLY 700 VIOLATIONS OF THE EMERGENCY MEDICAL TREATMENT AND LABOR ACT – OR EMTALA--- 
+ 
+...ALL INVOLVING PREGNANCY EMERGENCIES BETWEEN 2011 AND 2022.”
 
 ```{r}
 n_distinct(emtala_pregnant$facility_id)
 
-#filtering for any violations after the supreme court overturning Roe v. Wade: 
+emtala_pregnant%>%
+  count()
 
 emtala_pregnant%>%
- dplyr::filter(inspection_date > '2022-06-24')
+  count(state)
 ```
 
-## TEXT: “Emergency departments have been violating EMTALA statutes relating to pregnant people for over 10 years (at least since 2011).” 
+Web: “racking up at least 675 federal violations since 2011.” 
+Script:“...ALL INVOLVING PREGNANCY EMERGENCIES BETWEEN 2011 AND 2022.” 
+ 
 
 ```{r}
 emtala_pregnant%>%
   count(year)
 ```
 
-##"“After the fall of Roe v. Wade, the Biden administration has continued to remind emergency departments of their duty to serve pregnant patients by reinforcing EMTALA, the anti-patient dumping law. Of the 358 investigations that found EMTALA investigations relating to pregnant patients since 2013, only 11 (3%) led to a monetary fine.” 
+Web: “Cases involving pregnant women made up about 16% of all EMTALA investigations.” 
 
 ```{r}
+
 #number of EMTALA pregnant patient investigations since 2011
 n_distinct(emtala_pregnant$EVENT_ID)
 
 #number of EMTALA investigations overall since 2011
-n_distinct(emtala_psych_crit_short$EVENT_ID)
+n_distinct(emtala_events_psych_crit_short$EVENT_ID)
 
-#number of EMTALA pregnant patient investigations since 2013
-emtala_pregnant_post_2013 <- emtala_pregnant %>%
-filter(inspection_date > '2012-12-31')
-
-n_distinct(emtala_pregnant_post_2013$EVENT_ID)
-  
 #percent of EMTALA investigations involving a pregnant patient since 2011 
 413/2694 
 
-#percent of EMTALA investigations involving a pregnant patient resulting in a monetary fine (civil monetary penalty from HHS OIG office)
-11/347
 ```
 
-##“Out of all EMTALA violations, when it comes to pregnant patients, emergency departments are failing to provide medical screening examinations the most.”  
+Web: “We found the most common EMTALA violation was “failure to provide medical screening examinations.” (medical screening exam = 2406)
 
 ```{r}
 emtala_pregnant %>%
   count(deficiency_tag)
 
-270/693
+262/675
 ```
 
+Creating data for the Flourish visualization: 
 
-## “When it comes to EMTALA, hundreds of emergency departments have violated the rights of pregnant women but only 11 ERs have had monetary penalties.” 
-## ALT:"CMS only imposed monetary penalties on 11 ERs in the past 10 years (2013-2022) for EMTALA violations relating to pregnant people -- even though it found hundreds (339) of facilities committing these violations."
-
-```{r}
-n_distinct(emtala_pregnant_post_2013$facility_id)
-n_distinct(emtala_pregnant_post_2013$EVENT_ID)
-```
-
-Lets make a visualization!
-```{r}
-emtala_preg_def_count <- emtala_pregnant %>%
-count(deficiency_tag)
-
-```
-
-```{r}
-n_distinct(emtala_pregnant$EVENT_ID)
-  
-```
-
-
-```{r}
-ggplot(data=emtala_preg_def_count, aes(x=deficiency_tag, y=n))+
-  geom_bar(stat = "identity")+
-  geom_text(aes(label=deficiency_tag), vjust=-0.3, size=2.5)+
-  theme_minimal()
-  
-```
-
-```{r}
-#compare emtala preg serious violations rate by year to rate of emtala serious violations per year 
-
-#serious violations - 2406-2409
-
-#serious violations in 2011/all violations in 2011
-
-emtala_psych_crit_short_def_count <- emtala_psych_crit_short%>%
-  filter(deficiency_tag == "2406")%>%
-  group_by(deficiency_tag)%>%
-  count(year)
-
-emtala_psych_crit_short_def_count$emtala_rate2406 <- 
-  (emtala_psych_crit_short_def_count$n/6692)*100
-
-emtala_preg_def_count<- emtala_pregnant %>%
-  filter(deficiency_tag == "2406")%>%
-  group_by(deficiency_tag)%>%
-  count(year)
-
-emtala_preg_def_count$emtalapreg_rate2406 <- 
-  (emtala_preg_def_count$n/693)*100
-
-emtala_2406_list <- list(emtala_psych_crit_short_def_count, emtala_preg_def_count)
-
-df <- Reduce(function(x, y) merge(x, y, all = TRUE), emtala_2406_list)
-
-write_csv(df, "data/source/df.csv")
-
-df_transpose <- read_csv("data/source/df_transpose.csv")
-
-```
-
-```{r}
-df_transpose %>% 
-  ggplot(aes(x=year, y=rate, color=type)) +
-  geom_line() +
-theme_minimal() +
-  theme(legend.position = 'bottom') +
-  labs(title="EMTALA lack of medical screening",
-       x = "Year",
-       y = "Rate")
-
-```
-
+Link to flourish viz: https://public.flourish.studio/visualisation/13293383/
 ```{r}
 emtala_concat_violations<- emtala_pregnant %>%
   dplyr:: select(facility_name, hospital_type, facility_id, address, city, state, deficiency_tag,dfcncy_desc, inspection_date, EVENT_ID, year)%>%
@@ -386,6 +307,7 @@ distinct_concat_eventid<-
 distinct_concat_eventid[duplicated(distinct_concat_eventid$EVENT_ID),]
 
 ```
+
 ```{r}
 distinct_concat_hospitals<- distinct_concat_eventid%>%
   group_by(facility_id) %>% 
@@ -407,7 +329,10 @@ concat <- concat_hospitals[!duplicated(concat_hospitals$facility_id),]
 ```
 
 
-Which hospitals are rural/urban:
+Web: “Scripps News manually reviewed hundreds of CMS investigations involving pregnant patients of both rural and urban hospitals.”  
+
+Script: “OUR INVESTIGATION FOUND THE CASES INVOLVE BOTH SMALL, RURAL FACILITIES..AND THOSE IN BIG CITIES” 
+ 
 
 ```{r}
 rural_urban_hospitals <- read_excel("data/public/rural_urban_hospitals.xlsx")
@@ -437,26 +362,20 @@ write_csv(hospital_no_status, "data/source/hospital_no_status.csv")
 
 ```
 
-
-
 ```{r}
 emtala_hospital_status %>%
-  count(`Rural Status`)
+  filter(`Rural Status` == "Yes")%>%
+  count()
 
-145/362
-
+emtala_hospital_status %>%
+  filter(`Rural Status` == "No")%>%
+  count()
 ```
 
-```{r}
-emtala_pregnant %>%
-  count(year)
-```
-
+Web: "Our investigation found of the cases that were investigated by CMS, at least 237 involved pregnant women going to the ER for care and being turned away."
 
 ```{r}
-turnaway <- read_xlsx("data/turnaway.xlsx")
-
-n_distinct(turnaway$EVENT_ID)
+turnaway <- read_xlsx("data/processed/turnaway.xlsx")
 ```
 
 ```{r}
@@ -466,10 +385,5 @@ turnaway_y <- turnaway %>%
 
 n_distinct(turnaway_y$EVENT_ID)
 
-```
-
-```{r}
-emtala_pregnant%>%
-  count(deficiency_tag)
 ```
 
