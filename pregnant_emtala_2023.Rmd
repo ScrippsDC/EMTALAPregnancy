@@ -355,12 +355,12 @@ emtala_hospital_status[duplicated(emtala_hospital_status$facility_id),]
 ```
 
 
-```{r}
+
 hospital_no_status <- anti_join(concat, emtala_hospital_status, by = "facility_id", .keep_all = TRUE)
 
 write_csv(hospital_no_status, "data/source/hospital_no_status.csv")
 
-```
+
 
 ```{r}
 emtala_hospital_status %>%
