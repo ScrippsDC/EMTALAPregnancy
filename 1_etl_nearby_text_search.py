@@ -3,7 +3,7 @@ import pandas, re
 # Stop phrases @cimar methodology for detecting pregnant patients -- this is adding back in some of the generic 
 # uses of the word "pregnancy" that @rachgoldaz's methodology removed. But since we're only looking at text nearby
 # patient identifiers, we get fewer false positives.
-IGNORE_PHRASES_PASS_RC = ["pregnancy test","test for pregnancy","active labor act","active labor (sic) act"]
+IGNORE_PHRASES_PASS_RC = ["pregnancy test","test for pregnancy","active labor act","active labor (sic) act","emergency medical treatment and active labor"]
 
 # Keywords for @cimar methodology for detecting pregnant patients
 KEYWORDS_RC = ['gravid','pregnan','eclampsia','caeserian',' c-section',' csection',' c section',' para ','gestation','water break','water broke','active labor','obstetr']

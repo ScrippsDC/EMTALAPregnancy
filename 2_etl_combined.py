@@ -7,3 +7,4 @@ etl_1 = pandas.read_excel("data/processed/1_etl_nearby_text_search.xlsx")
 combo = pandas.concat([etl_1,etl_0]).drop_duplicates(subset=["key_identifier"])
 print(combo.shape)
 combo.to_excel("data/processed/2_etl_combined.xlsx")
+
