@@ -26,11 +26,17 @@ emtala_events_psych_crit_short$key_identifier <-
 ## It also if psych hospitals turn away women in active labor, I think they're still violating EMTALA? (Check with Rachel)
 # emtala_events_crit_short <- filter(emtala_events_psych_crit_short, hospital_type != "Psychiatric")
 emtala_events_crit_short <- emtala_events_psych_crit_short
+all_emtala_events <- emtala_events_crit_short
+print(dim(all_emtala_events))
+all_emtala_events$inspection_text <- ifelse(length(all_emtala_events$inspection_text) > 32767, substr(all_emtala_events$inspection_text,0,32766), all_emtala_events$inspection_text)
+
+write_xlsx(all_emtala_events,"data/processed/0_etl_all_emtala_deficiencies.xlsx")
 
 # Moved these into their own files so they're a little easier to work with than a
 # Stop phrases are almost universally to screen out uses of the word "pregnancy" that are about pregnancy in the abstract, not a particular pregnancy
 stopph <- readLines("data/manual/0_etl_stopphrases.txt")
 keywords <- readLines("data/manual/0_etl_keywords.txt")
+
 
 emtala_events_crit_short$std_text_rg <- stringi::stri_replace_all_regex(emtala_events_crit_short$inspection_text,
                                   pattern=stopph,
@@ -52,6 +58,11 @@ emtala_key_word_deficiencies_hosp_type <- emtala_key_word_deficiencies %>%
   summarise(count = n())
 
 print(emtala_key_word_deficiencies_hosp_type)
+
+# Manage date fields
+emtala_key_word_deficiencies$inspection_date <- as.Date(emtala_key_word_deficiencies$inspection_date)
+emtala_key_word_deficiencies$year <-
+  as.numeric(format(emtala_key_word_deficiencies$inspection_date, "%Y"))
 
 # Truncate rows where the inspection_text is too long to write to excel
 emtala_key_word_deficiencies$inspection_text <- ifelse(emtala_key_word_deficiencies$inspection_text_len > 32767, substr(emtala_key_word_deficiencies$inspection_text,0,32766), emtala_key_word_deficiencies$inspection_text)
