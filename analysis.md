@@ -75,6 +75,12 @@ emtala_pregnant%>%group_by(state)%>% summarize(violations_per_state = n_distinct
     ## 10 IA                      23
     ## # ℹ 34 more rows
 
+``` r
+print(paste("facility_count:",facility_count,"violation_count:",violation_count,"state_count:",state_count))
+```
+
+    ## [1] "facility_count: 386 violation_count: 675 state_count: 44"
+
 Web: “racking up at least 675 federal violations since 2011.”
 Script:“…ALL INVOLVING PREGNANCY EMERGENCIES BETWEEN 2011 AND 2022.”
 

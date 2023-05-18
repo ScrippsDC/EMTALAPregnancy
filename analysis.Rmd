@@ -48,6 +48,8 @@ state_count<-n_distinct(emtala_pregnant$state)
 
 emtala_pregnant%>%group_by(state)%>% summarize(violations_per_state = n_distinct(key_identifier))
 
+print(paste("facility_count:",facility_count,"violation_count:",violation_count,"state_count:",state_count))
+
 ```
 
 Web: “racking up at least 675 federal violations since 2011.” 
