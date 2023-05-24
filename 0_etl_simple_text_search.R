@@ -59,11 +59,6 @@ emtala_key_word_deficiencies_hosp_type <- emtala_key_word_deficiencies %>%
 
 print(emtala_key_word_deficiencies_hosp_type)
 
-# Manage date fields
-emtala_key_word_deficiencies$inspection_date <- as.Date(emtala_key_word_deficiencies$inspection_date)
-emtala_key_word_deficiencies$year <-
-  as.numeric(format(emtala_key_word_deficiencies$inspection_date, "%Y"))
-
 # Truncate rows where the inspection_text is too long to write to excel
 emtala_key_word_deficiencies$inspection_text <- ifelse(emtala_key_word_deficiencies$inspection_text_len > 32767, substr(emtala_key_word_deficiencies$inspection_text,0,32766), emtala_key_word_deficiencies$inspection_text)
 emtala_key_word_deficiencies$std_text_rg <- ifelse(emtala_key_word_deficiencies$std_text_rg_len > 32767, substr(emtala_key_word_deficiencies$std_text_rg,0,32766), emtala_key_word_deficiencies$std_text_rg)

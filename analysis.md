@@ -67,8 +67,8 @@ emtala_pregnant%>%group_by(state)%>% summarize(violations_per_state = n_distinct
     ##  2 AL                      27
     ##  3 AR                       5
     ##  4 AZ                       7
-    ##  5 CA                      65
-    ##  6 CO                      19
+    ##  5 CA                      66
+    ##  6 CO                      20
     ##  7 CT                       3
     ##  8 FL                      41
     ##  9 GA                      34
@@ -79,7 +79,7 @@ emtala_pregnant%>%group_by(state)%>% summarize(violations_per_state = n_distinct
 print(paste("facility_count:",facility_count,"violation_count:",violation_count,"state_count:",state_count))
 ```
 
-    ## [1] "facility_count: 386 violation_count: 675 state_count: 44"
+    ## [1] "facility_count: 389 violation_count: 683 state_count: 44"
 
 Web: “racking up at least 675 federal violations since 2011.”
 Script:“…ALL INVOLVING PREGNANCY EMERGENCIES BETWEEN 2011 AND 2022.”
@@ -92,15 +92,15 @@ emtala_pregnant%>%
     ## # A tibble: 12 × 2
     ##     year     n
     ##    <dbl> <int>
-    ##  1  2011    76
+    ##  1  2011    77
     ##  2  2012    43
     ##  3  2013    51
     ##  4  2014    72
     ##  5  2015    81
-    ##  6  2016    52
-    ##  7  2017    90
-    ##  8  2018    66
-    ##  9  2019    62
+    ##  6  2016    53
+    ##  7  2017    91
+    ##  8  2018    69
+    ##  9  2019    64
     ## 10  2020    25
     ## 11  2021    40
     ## 12  2022    17
@@ -119,7 +119,7 @@ count_invest<-n_distinct(emtala_all$EVENT_ID)
 print(paste(count_preg,"investigations of violations against pregnant patients, out of",count_invest,"investigations of overall. (",count_preg/count_invest*100,"%)"))
 ```
 
-    ## [1] "413 investigations of violations against pregnant patients, out of 2694 investigations of overall. ( 15.3303637713437 %)"
+    ## [1] "417 investigations of violations against pregnant patients, out of 2694 investigations of overall. ( 15.4788418708241 %)"
 
 Web: “We found the most common EMTALA violation was “failure to provide
 medical screening examinations.” (medical screening exam = 2406)
@@ -134,10 +134,10 @@ emtala_pregnant %>%
     ##             <dbl> <int>
     ##  1           2400    77
     ##  2           2401     3
-    ##  3           2402     4
+    ##  3           2402     9
     ##  4           2403     4
     ##  5           2404     9
-    ##  6           2405    84
+    ##  6           2405    87
     ##  7           2406   262
     ##  8           2407    83
     ##  9           2408    15
@@ -152,7 +152,7 @@ count_2406 <- n_distinct((emtala_pregnant %>% filter(deficiency_tag == 2406))$ke
 print(paste(count_2406,"medical screening violations against pregnant patients, out of",count_all_preg,"violations against pregnant patients of overall. (",count_2406/count_all_preg*100,"%)"))
 ```
 
-    ## [1] "262 medical screening violations against pregnant patients, out of 675 violations against pregnant patients of overall. ( 38.8148148148148 %)"
+    ## [1] "262 medical screening violations against pregnant patients, out of 683 violations against pregnant patients of overall. ( 38.3601756954612 %)"
 
 262/675
 

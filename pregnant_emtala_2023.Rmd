@@ -311,16 +311,6 @@ distinct_concat_eventid[duplicated(distinct_concat_eventid$EVENT_ID),]
 ```
 
 ```{r}
-diamonds <- ggplot2::diamonds
-diamonds2 <- diamonds %>% 
-  dplyr::mutate(price_per_carat = price / carat)
-diamonds3 <- diamonds2 %>% group_by(cut) %>% summarize(mean_depth = mean(depth, na.rm = TRUE))
-
-
-diamonds3
-```
-
-```{r}
 distinct_concat_hospitals<- distinct_concat_eventid%>%
   group_by(facility_id) %>% 
      mutate(violation = paste0(dfcncy_desc, collapse = ", "))
