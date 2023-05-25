@@ -119,10 +119,10 @@ Reporters captured any violations where the following words appeared 100 charact
 | `water break`  |
 | `water broke`  |
 
-For accuracy, Scripps News reporters manually reviewed each captured violation to determine if it involved a pregnant patient. After manual review, the resulting EMTALA_pregnancy database included 675 violations that totaled 413 investigations within 386 hospitals.
+For accuracy, Scripps News reporters manually reviewed each captured violation to determine if it involved a pregnant patient. After manual review, the resulting EMTALA_pregnancy database included 683 violations that totaled 417 investigations within 389 hospitals.
 
 Reporters used the EMTALA_pregnancy database for additional analysis and findings within the investigation.
 
 #Hospitals Turning Away Pregnant Patients
 
-Scripps News Reporters manually reviewed every captured EMTALA violation of inappropriate transfer, lack of medical screening exam and lack of stabilization within our EMTALA pregnancy database. These violations are the most serious because they pose the greatest health risk if violated and can be potentially life-threatening. Scripps News determined whether a pregnant patient was turned away from the emergency department if the patient sought care and was not able to receive it. Reporters found at least 237 investigations of women being turned away.
+Scripps News Reporters manually reviewed every captured EMTALA violation of inappropriate transfer, lack of medical screening exam and lack of stabilization within our EMTALA pregnancy database. These violations are the most serious because they pose the greatest health risk if violated and can be potentially life-threatening. Scripps News determined whether a pregnant patient was turned away from the emergency department if the patient sought care and was not able to receive it. Reporters found at least 241 investigations of women being turned away.
