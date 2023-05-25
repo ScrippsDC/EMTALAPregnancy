@@ -17,7 +17,7 @@ Scripps News based this investigation on data Rachel Gold, Scripps News data rep
 
 Enforcing EMTALA is primarily a complaint-driven system, leaving the burden of reporting violations in the hands of patients and hospital staff. 
 
-The data contains rows of violations from January 1, 2011 to September 30, 2022 from short-term, critical access and psychiatric hospitals in all 50 states. Each violation has a unique identifier, EVENT_ID, that groups together violations within the same investigation. One investigation (EVENT_ID) may have multiple violations. The dataset labels each violation with a deficiency tag that correlates to the specific CMS Condition of Participation violated within the investigation.
+At the time of our analysis, the data contained rows of violations from January 1, 2011 to September 30, 2022 from short-term, critical access and psychiatric hospitals in all 50 states. Each violation has a unique identifier, EVENT_ID, that groups together violations within the same investigation. One investigation (EVENT_ID) may have multiple violations. The dataset labels each violation with a deficiency tag that correlates to the specific CMS Condition of Participation violated within the investigation.
 
 Scripps News reporters limited their analysis to short-term and critical access hospitals (as opposed to psychiatric hospitals) because reporters agreed pregnant patients experiencing medical emergencies were most likely to go to short-term and critical access hospitals for care.
 
@@ -37,7 +37,7 @@ Inspection texts identified a pregnant patient using a variety of descriptors re
 
 Scripps News reporters found the following key words were more likely to improperly capture violations describing hospital policies for pregnant patients but the patient within the violation was not pregnant. Reporters replaced these key words with blank spaces within the inspection text:
 
-| Phrases                                                                                                                                                                                                                                                                                                                            |
+| Phrases that Improperly Captured EMTALA Violations                                                                                                                                                                                                                                                                                                                         |
 |------------------------------------------------------------------------|
 | `A minor who understands the nature and consequences of treatment is capable of consenting if the minor is 18 years of age or older, graduated from high school, has married, has been pregnant, needs diagnosis or treatment of pregnancy or venereal disease, or is 14 years of age or older and requests psychiatric treatment` |
 | `A preterm or premature baby is delivered before 37 weeks of the pregnancy`                                                                                                                                                                                                                                                        |
@@ -72,7 +72,7 @@ Scripps News reporters found the following key words were more likely to imprope
 
 Reporters used the following key words to search for and capture any violations involving pregnant patients:
 
-| Phrases                       |
+| Keyword Phrases               |
 |-------------------------------|
 | `currently pregnant`          |
 | `gestational age`             |
@@ -103,7 +103,7 @@ Reporters used the following key words to search for and capture any violations 
 
 Reporters captured any violations where the following words appeared 100 characters before or 200 characters after the patient identifier:
 
-| Phrases        |
+| Keyword Phrases |
 |----------------|
 | `active labor` |
 | `c section`    |
