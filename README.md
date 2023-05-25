@@ -25,7 +25,7 @@ Scripps News reporters' main goal was to capture any EMTALA violations that invo
 
 Each violation includes an inspection text, a detailed note of the violation. This text tells the story of the patient including a patient identifier, the medical complaint, a timeline of events, interviews with medical professionals and any policies relating to the violation. Any identifying patient or medical professional information was heavily redacted.
 
-##Capturing EMTALA Violations Involving Pregnant Patients
+## Capturing EMTALA Violations Involving Pregnant Patients
 
 Scripps News reporters realized capturing violations involving a pregnant patient would require three separate keyword searches. The reasons were two-fold:
 
@@ -33,7 +33,7 @@ The inspection text included hospital policies regarding pregnant patients but t
 
 Inspection texts identified a pregnant patient using a variety of descriptors relating to pregnancy or obstetrics.
 
-#Keyword Search
+## Keyword Search
 
 Scripps News reporters found the following key words were more likely to improperly capture violations describing hospital policies for pregnant patients but the patient within the violation was not pregnant. Reporters replaced these key words with blank spaces within the inspection text:
 
@@ -123,6 +123,6 @@ For accuracy, Scripps News reporters manually reviewed each captured violation t
 
 Reporters used the EMTALA_pregnancy database for additional analysis and findings within the investigation.
 
-#Hospitals Turning Away Pregnant Patients
+## Hospitals Turning Away Pregnant Patients
 
 Scripps News Reporters manually reviewed every captured EMTALA violation of inappropriate transfer, lack of medical screening exam and lack of stabilization within our EMTALA pregnancy database. These violations are the most serious because they pose the greatest health risk if violated and can be potentially life-threatening. Scripps News determined whether a pregnant patient was turned away from the emergency department if the patient sought care and was not able to receive it. Reporters found at least 241 investigations of patients being turned away.
