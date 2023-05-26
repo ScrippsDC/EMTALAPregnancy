@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## R Markdown
 
-The purpose of this markdown is to analyze CMS Hospital Survey Deficiencies for specific reproductive-language words. Our goal is to capture all EMTALA violations involving pregnant patients. 
+The purpose of this markdown is to analyze CMS Hospital Survey Deficiencies that we've already filtered down to EMTALA violations involving pregnant patients.
 
 ```{r}
 library(readxl)
@@ -25,20 +25,25 @@ library(readr)
 ```
 
 
+## Data
 
-##Reading in violations from 2011-Q3 2022 post manual review of inspection_text to determine if violation involved a pregnant patient: This includes Rosie's 109 captured violations 
+Reading in violations from 2011-Q3 2022 that we automatically filtered by features of the inspection_text field (0_etl, 1_etl, and 2_etl). These were then manually reviewed by Rachel Gold and Karen Rodriguez for whether they, in fact, pertained to pregnant patients.
+
 ```{r}
 emtala_pregnant <- read_xlsx("data/manual/confirmed_pregnant.xlsx")
 emtala_all <- read_xlsx("data/processed/0_etl_all_emtala_deficiencies.xlsx")
 
 ```
 
-Web: “Our investigation found 386 hospitals spanning 44 states have violated EMTALA statutes while attending to pregnant patients, racking up at least 675 federal violations since 2011.” 
- 
-Script: “OUR SCRIPPS NEWS INVESTIGATION FOUND IT IS AMONG 386 HOSPITALS (FC) AROUND THE COUNTRY REPONSIBLE FOR NEARLY 700 VIOLATIONS OF THE EMERGENCY MEDICAL TREATMENT AND LABOR ACT – OR EMTALA--- 
- 
-...ALL INVOLVING PREGNANCY EMERGENCIES BETWEEN 2011 AND 2022.”
+## Hospital counts, features
 
+Web: “Our investigation found 389 hospitals spanning 44 states have violated EMTALA statutes while attending to pregnant patients, racking up at least 675 federal violations since 2011.” 
+ 
+Script: “OUR SCRIPPS NEWS INVESTIGATION FOUND IT IS AMONG 389 HOSPITALS (FC) AROUND THE COUNTRY REPONSIBLE FOR NEARLY 700 VIOLATIONS OF THE EMERGENCY MEDICAL TREATMENT AND LABOR ACT – OR EMTALA"
+
+## Violation count
+
+Web: “racking up at least 675 federal violations since 2011.” 
 ```{r}
 facility_count<-n_distinct(emtala_pregnant$facility_id)
 
@@ -46,22 +51,24 @@ violation_count<-n_distinct(emtala_pregnant$key_identifier)
 
 state_count<-n_distinct(emtala_pregnant$state)
 
-emtala_pregnant%>%group_by(state)%>% summarize(violations_per_state = n_distinct(key_identifier))
-
 print(paste("facility_count:",facility_count,"violation_count:",violation_count,"state_count:",state_count))
+
+emtala_pregnant%>%
+  count(state,sort=TRUE)
 
 ```
 
-Web: “racking up at least 675 federal violations since 2011.” 
+## Date range
 Script:“...ALL INVOLVING PREGNANCY EMERGENCIES BETWEEN 2011 AND 2022.” 
  
-
 ```{r}
 emtala_pregnant%>%
   count(year)
 ```
 
-Web: “Cases involving pregnant women made up about 16% of all EMTALA investigations.” 
+## Percentage of EMTALA overall
+
+Web: “Cases involving pregnant women made up about 15% of all EMTALA investigations.” 
 
 ```{r}
 
@@ -76,6 +83,7 @@ print(paste(count_preg,"investigations of violations against pregnant patients, 
 
 ```
 
+## EMTALA violation ranking
 Web: “We found the most common EMTALA violation was “failure to provide medical screening examinations.” (medical screening exam = 2406)
 
 ```{r}
@@ -89,16 +97,21 @@ count_2406 <- n_distinct((emtala_pregnant %>% filter(deficiency_tag == 2406))$ke
 print(paste(count_2406,"medical screening violations against pregnant patients, out of",count_all_preg,"violations against pregnant patients of overall. (",count_2406/count_all_preg*100,"%)"))
 ```
 
-262/675
+## Turnaway count
 
+Rachel Gold and Karen Rodriguez also manually reviewed the EMTALA violations for whether the pregnant patient was actually turned away by the hospital.
 
-Web: "Our investigation found of the cases that were investigated by CMS, at least 237 involved pregnant women going to the ER for care and being turned away."
+Web: "Our investigation found of the cases that were investigated by CMS, at least 241 involved pregnant women going to the ER for care and being turned away."
 
 ```{r}
 # I added "turnaway" as a column in confirmed_pregnant.xlsx
 turnaway <- emtala_pregnant %>% filter(turnaway == TRUE)
 n_distinct(turnaway$EVENT_ID)
 ```
+
+## Rural vs. urban
+
+Web: "EMTALA violations involving pregnancy [...] included small hospitals and large ones, in both rural and urban areas."
 
 ```{r}
 emtala_facilities <- read.csv("data/processed/facility_summary.csv")

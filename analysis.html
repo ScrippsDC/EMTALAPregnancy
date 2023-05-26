@@ -605,8 +605,8 @@ padding-top: 0px;
 <p>Rachel Gold 2022-07-12</p>
 <h2 id="r-markdown">R Markdown</h2>
 <p>The purpose of this markdown is to analyze CMS Hospital Survey
-Deficiencies for specific reproductive-language words. Our goal is to
-capture all EMTALA violations involving pregnant patients.</p>
+Deficiencies that we’ve already filtered down to EMTALA violations
+involving pregnant patients.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
 <pre><code>## 
@@ -622,43 +622,49 @@ capture all EMTALA violations involving pregnant patients.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">library</span>(writexl)</span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">library</span>(readr)</span></code></pre></div>
-<p>##Reading in violations from 2011-Q3 2022 post manual review of
-inspection_text to determine if violation involved a pregnant patient:
-This includes Rosie’s 109 captured violations</p>
+<h2 id="data">Data</h2>
+<p>Reading in violations from 2011-Q3 2022 that we automatically
+filtered by features of the inspection_text field (0_etl, 1_etl, and
+2_etl). These were then manually reviewed by Rachel Gold and Karen
+Rodriguez for whether they, in fact, pertained to pregnant patients.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>emtala_pregnant <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="st">&quot;data/manual/confirmed_pregnant.xlsx&quot;</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>emtala_all <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="st">&quot;data/processed/0_etl_all_emtala_deficiencies.xlsx&quot;</span>)</span></code></pre></div>
-<p>Web: “Our investigation found 386 hospitals spanning 44 states have
+<h2 id="hospital-counts-features">Hospital counts, features</h2>
+<p>Web: “Our investigation found 389 hospitals spanning 44 states have
 violated EMTALA statutes while attending to pregnant patients, racking
 up at least 675 federal violations since 2011.”</p>
-<p>Script: “OUR SCRIPPS NEWS INVESTIGATION FOUND IT IS AMONG 386
+<p>Script: “OUR SCRIPPS NEWS INVESTIGATION FOUND IT IS AMONG 389
 HOSPITALS (FC) AROUND THE COUNTRY REPONSIBLE FOR NEARLY 700 VIOLATIONS
-OF THE EMERGENCY MEDICAL TREATMENT AND LABOR ACT – OR EMTALA—</p>
-<p>…ALL INVOLVING PREGNANCY EMERGENCIES BETWEEN 2011 AND 2022.”</p>
+OF THE EMERGENCY MEDICAL TREATMENT AND LABOR ACT – OR EMTALA”</p>
+<h2 id="violation-count">Violation count</h2>
+<p>Web: “racking up at least 675 federal violations since 2011.”</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>facility_count<span class="ot">&lt;-</span><span class="fu">n_distinct</span>(emtala_pregnant<span class="sc">$</span>facility_id)</span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>violation_count<span class="ot">&lt;-</span><span class="fu">n_distinct</span>(emtala_pregnant<span class="sc">$</span>key_identifier)</span>
 <span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a></span>
 <span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>state_count<span class="ot">&lt;-</span><span class="fu">n_distinct</span>(emtala_pregnant<span class="sc">$</span>state)</span>
 <span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>emtala_pregnant<span class="sc">%&gt;%</span><span class="fu">group_by</span>(state)<span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">violations_per_state =</span> <span class="fu">n_distinct</span>(key_identifier))</span></code></pre></div>
-<pre><code>## # A tibble: 44 × 2
-##    state violations_per_state
-##    &lt;chr&gt;                &lt;int&gt;
-##  1 AK                       2
-##  2 AL                      27
-##  3 AR                       5
-##  4 AZ                       7
-##  5 CA                      66
-##  6 CO                      20
-##  7 CT                       3
-##  8 FL                      41
-##  9 GA                      34
-## 10 IA                      23
-## # ℹ 34 more rows</code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">&quot;facility_count:&quot;</span>,facility_count,<span class="st">&quot;violation_count:&quot;</span>,violation_count,<span class="st">&quot;state_count:&quot;</span>,state_count))</span></code></pre></div>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">&quot;facility_count:&quot;</span>,facility_count,<span class="st">&quot;violation_count:&quot;</span>,violation_count,<span class="st">&quot;state_count:&quot;</span>,state_count))</span></code></pre></div>
 <pre><code>## [1] &quot;facility_count: 389 violation_count: 683 state_count: 44&quot;</code></pre>
-<p>Web: “racking up at least 675 federal violations since 2011.”
-Script:“…ALL INVOLVING PREGNANCY EMERGENCIES BETWEEN 2011 AND 2022.”</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>emtala_pregnant<span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">count</span>(state,<span class="at">sort=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 44 × 2
+##    state     n
+##    &lt;chr&gt; &lt;int&gt;
+##  1 CA       66
+##  2 TN       46
+##  3 NC       45
+##  4 NY       43
+##  5 FL       41
+##  6 GA       34
+##  7 PA       33
+##  8 OR       29
+##  9 AL       27
+## 10 TX       26
+## # ℹ 34 more rows</code></pre>
+<h2 id="date-range">Date range</h2>
+<p>Script:“…ALL INVOLVING PREGNANCY EMERGENCIES BETWEEN 2011 AND
+2022.”</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>emtala_pregnant<span class="sc">%&gt;%</span></span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">count</span>(year)</span></code></pre></div>
 <pre><code>## # A tibble: 12 × 2
@@ -676,7 +682,8 @@ Script:“…ALL INVOLVING PREGNANCY EMERGENCIES BETWEEN 2011 AND 2022.”</p>
 ## 10  2020    25
 ## 11  2021    40
 ## 12  2022    17</code></pre>
-<p>Web: “Cases involving pregnant women made up about 16% of all EMTALA
+<h2 id="percentage-of-emtala-overall">Percentage of EMTALA overall</h2>
+<p>Web: “Cases involving pregnant women made up about 15% of all EMTALA
 investigations.”</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co">#number of EMTALA pregnant patient investigations since 2011</span></span>
 <span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>count_preg<span class="ot">&lt;-</span><span class="fu">n_distinct</span>(emtala_pregnant<span class="sc">$</span>EVENT_ID)</span>
@@ -687,6 +694,7 @@ investigations.”</p>
 <span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co">#percent of EMTALA investigations involving a pregnant patient since 2011 </span></span>
 <span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(count_preg,<span class="st">&quot;investigations of violations against pregnant patients, out of&quot;</span>,count_invest,<span class="st">&quot;investigations of overall. (&quot;</span>,count_preg<span class="sc">/</span>count_invest<span class="sc">*</span><span class="dv">100</span>,<span class="st">&quot;%)&quot;</span>))</span></code></pre></div>
 <pre><code>## [1] &quot;417 investigations of violations against pregnant patients, out of 2694 investigations of overall. ( 15.4788418708241 %)&quot;</code></pre>
+<h2 id="emtala-violation-ranking">EMTALA violation ranking</h2>
 <p>Web: “We found the most common EMTALA violation was “failure to
 provide medical screening examinations.” (medical screening exam =
 2406)</p>
@@ -712,14 +720,20 @@ provide medical screening examinations.” (medical screening exam =
 <span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a></span>
 <span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(count_2406,<span class="st">&quot;medical screening violations against pregnant patients, out of&quot;</span>,count_all_preg,<span class="st">&quot;violations against pregnant patients of overall. (&quot;</span>,count_2406<span class="sc">/</span>count_all_preg<span class="sc">*</span><span class="dv">100</span>,<span class="st">&quot;%)&quot;</span>))</span></code></pre></div>
 <pre><code>## [1] &quot;262 medical screening violations against pregnant patients, out of 683 violations against pregnant patients of overall. ( 38.3601756954612 %)&quot;</code></pre>
-<p>262/675</p>
+<h2 id="turnaway-count">Turnaway count</h2>
+<p>Rachel Gold and Karen Rodriguez also manually reviewed the EMTALA
+violations for whether the pregnant patient was actually turned away by
+the hospital.</p>
 <p>Web: “Our investigation found of the cases that were investigated by
-CMS, at least 237 involved pregnant women going to the ER for care and
+CMS, at least 241 involved pregnant women going to the ER for care and
 being turned away.”</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># I added &quot;turnaway&quot; as a column in confirmed_pregnant.xlsx</span></span>
 <span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>turnaway <span class="ot">&lt;-</span> emtala_pregnant <span class="sc">%&gt;%</span> <span class="fu">filter</span>(turnaway <span class="sc">==</span> <span class="cn">TRUE</span>)</span>
 <span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a><span class="fu">n_distinct</span>(turnaway<span class="sc">$</span>EVENT_ID)</span></code></pre></div>
 <pre><code>## [1] 241</code></pre>
+<h2 id="rural-vs-urban">Rural vs. urban</h2>
+<p>Web: “EMTALA violations involving pregnancy […] included small
+hospitals and large ones, in both rural and urban areas.”</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>emtala_facilities <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/processed/facility_summary.csv&quot;</span>)</span>
 <span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>emtala_facilities <span class="sc">%&gt;%</span></span>
 <span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>  <span class="fu">count</span>(Rural.Status)</span></code></pre></div>
