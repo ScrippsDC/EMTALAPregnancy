@@ -296,39 +296,46 @@ Creating data for the Flourish visualization:
 
 Link to flourish viz: https://public.flourish.studio/visualisation/13293383/
 ```{r}
+
+# Groupby EVENT_ID, list violations by event, multiple rows per event even though defcncy_desc has been collapsed (same for all n rows)
 emtala_concat_violations<- emtala_pregnant %>%
   dplyr:: select(facility_name, hospital_type, facility_id, address, city, state, deficiency_tag,dfcncy_desc, inspection_date, EVENT_ID, year)%>%
      group_by(EVENT_ID) %>% 
      mutate(violations = paste0(dfcncy_desc, collapse = ", "))
 
-emtala_concat_violations
 
+# Only want one row per EVENT_ID
 distinct_concat_eventid<- 
      distinct(emtala_concat_violations, EVENT_ID, .keep_all = TRUE)
 
+# Check that there are no duplicates
 distinct_concat_eventid[duplicated(distinct_concat_eventid$EVENT_ID),]
 
 ```
 
 ```{r}
+# Doing the same thing but on the hospital level
 distinct_concat_hospitals<- distinct_concat_eventid%>%
   group_by(facility_id) %>% 
      mutate(violation = paste0(dfcncy_desc, collapse = ", "))
 
-distinct_concat_hospitals
-
+# Doing the same thing but on the hospital level
 distinct_concat_hospitals<- distinct_concat_hospitals%>%
   group_by(facility_id)%>%
   mutate(inspection_dates = paste0(inspection_date, collapse = ", "))
 
+# Doing the same thing but making counts instead of a list
 investigations_count<-distinct_concat_hospitals %>%
   group_by(facility_id) %>%
   summarize(distinct_investigations = n_distinct(EVENT_ID))
 
+# Check that there are no duplicates
 distinct_concat_hospitals[duplicated(distinct_concat_hospitals$facility_id),]
 
+# Joining the two data frames
 concat_hospitals <- distinct_concat_hospitals %>% inner_join(investigations_count,by="facility_id")
 
+# Drop duplicates
 concat <- concat_hospitals[!duplicated(concat_hospitals$facility_id),]
 ```
 
@@ -351,6 +358,7 @@ emtala_hospital_status <- concat %>% inner_join(rural_urban_hospitals,by="facili
 
 emtala_hospital_status <- distinct(emtala_hospital_status, EVENT_ID, .keep_all = TRUE)
 
+## For making the flourish chart
 write_csv(emtala_hospital_status, "data/source/emtala_hospital_status.csv")
 ```
 
@@ -359,11 +367,12 @@ emtala_hospital_status[duplicated(emtala_hospital_status$facility_id),]
 ```
 
 
-
+```{r}
+# Also for making the flourish chart
 hospital_no_status <- anti_join(concat, emtala_hospital_status, by = "facility_id", .keep_all = TRUE)
 
 write_csv(hospital_no_status, "data/source/hospital_no_status.csv")
-
+```
 
 
 ```{r}
