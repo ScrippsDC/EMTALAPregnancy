@@ -80,7 +80,7 @@ Web: “We found the most common EMTALA violation was “failure to provide medi
 
 ```{r}
 emtala_pregnant %>%
-  count(deficiency_tag)
+  count(deficiency_tag,sort=TRUE)
 
 # filter emtala_pregnant for deficiency tag == 2406
 count_all_preg <- n_distinct(emtala_pregnant$key_identifier)

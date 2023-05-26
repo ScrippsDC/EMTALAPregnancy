@@ -126,23 +126,23 @@ medical screening examinations.” (medical screening exam = 2406)
 
 ``` r
 emtala_pregnant %>%
-  count(deficiency_tag)
+  count(deficiency_tag,sort=TRUE)
 ```
 
     ## # A tibble: 11 × 2
     ##    deficiency_tag     n
     ##             <dbl> <int>
-    ##  1           2400    77
-    ##  2           2401     3
-    ##  3           2402     9
-    ##  4           2403     4
-    ##  5           2404     9
-    ##  6           2405    87
-    ##  7           2406   262
-    ##  8           2407    83
-    ##  9           2408    15
-    ## 10           2409   122
-    ## 11           2411    12
+    ##  1           2406   262
+    ##  2           2409   122
+    ##  3           2405    87
+    ##  4           2407    83
+    ##  5           2400    77
+    ##  6           2408    15
+    ##  7           2411    12
+    ##  8           2402     9
+    ##  9           2404     9
+    ## 10           2403     4
+    ## 11           2401     3
 
 ``` r
 # filter emtala_pregnant for deficiency tag == 2406
@@ -162,7 +162,6 @@ being turned away.”
 
 ``` r
 # I added "turnaway" as a column in confirmed_pregnant.xlsx
-emtala_pregnant <- read_xlsx("data/manual/confirmed_pregnant.xlsx")
 turnaway <- emtala_pregnant %>% filter(turnaway == TRUE)
 n_distinct(turnaway$EVENT_ID)
 ```
@@ -170,12 +169,12 @@ n_distinct(turnaway$EVENT_ID)
     ## [1] 241
 
 ``` r
-turnaway <- read_xlsx("data/processed/turnaway.xlsx")
-turnaway_y <- turnaway %>%
-  filter(turnaway == "Y")
- 
-
-n_distinct(turnaway_y$EVENT_ID)
+emtala_facilities <- read.csv("data/processed/facility_summary.csv")
+emtala_facilities %>%
+  count(Rural.Status)
 ```
 
-    ## [1] 237
+    ##   Rural.Status   n
+    ## 1           No 165
+    ## 2          Yes 129
+    ## 3         <NA>  95

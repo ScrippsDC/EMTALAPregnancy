@@ -691,21 +691,21 @@ investigations.”</p>
 provide medical screening examinations.” (medical screening exam =
 2406)</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>emtala_pregnant <span class="sc">%&gt;%</span></span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="fu">count</span>(deficiency_tag)</span></code></pre></div>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="fu">count</span>(deficiency_tag,<span class="at">sort=</span><span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 11 × 2
 ##    deficiency_tag     n
 ##             &lt;dbl&gt; &lt;int&gt;
-##  1           2400    77
-##  2           2401     3
-##  3           2402     9
-##  4           2403     4
-##  5           2404     9
-##  6           2405    87
-##  7           2406   262
-##  8           2407    83
-##  9           2408    15
-## 10           2409   122
-## 11           2411    12</code></pre>
+##  1           2406   262
+##  2           2409   122
+##  3           2405    87
+##  4           2407    83
+##  5           2400    77
+##  6           2408    15
+##  7           2411    12
+##  8           2402     9
+##  9           2404     9
+## 10           2403     4
+## 11           2401     3</code></pre>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co"># filter emtala_pregnant for deficiency tag == 2406</span></span>
 <span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>count_all_preg <span class="ot">&lt;-</span> <span class="fu">n_distinct</span>(emtala_pregnant<span class="sc">$</span>key_identifier)</span>
 <span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>count_2406 <span class="ot">&lt;-</span> <span class="fu">n_distinct</span>((emtala_pregnant <span class="sc">%&gt;%</span> <span class="fu">filter</span>(deficiency_tag <span class="sc">==</span> <span class="dv">2406</span>))<span class="sc">$</span>key_identifier)</span>
@@ -717,17 +717,16 @@ provide medical screening examinations.” (medical screening exam =
 CMS, at least 237 involved pregnant women going to the ER for care and
 being turned away.”</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># I added &quot;turnaway&quot; as a column in confirmed_pregnant.xlsx</span></span>
-<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>emtala_pregnant <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="st">&quot;data/manual/confirmed_pregnant.xlsx&quot;</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>turnaway <span class="ot">&lt;-</span> emtala_pregnant <span class="sc">%&gt;%</span> <span class="fu">filter</span>(turnaway <span class="sc">==</span> <span class="cn">TRUE</span>)</span>
-<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="fu">n_distinct</span>(turnaway<span class="sc">$</span>EVENT_ID)</span></code></pre></div>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>turnaway <span class="ot">&lt;-</span> emtala_pregnant <span class="sc">%&gt;%</span> <span class="fu">filter</span>(turnaway <span class="sc">==</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a><span class="fu">n_distinct</span>(turnaway<span class="sc">$</span>EVENT_ID)</span></code></pre></div>
 <pre><code>## [1] 241</code></pre>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>turnaway <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="st">&quot;data/processed/turnaway.xlsx&quot;</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>turnaway_y <span class="ot">&lt;-</span> turnaway <span class="sc">%&gt;%</span></span>
-<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>  <span class="fu">filter</span>(turnaway <span class="sc">==</span> <span class="st">&quot;Y&quot;</span>)</span>
-<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a> </span>
-<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a></span>
-<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a><span class="fu">n_distinct</span>(turnaway_y<span class="sc">$</span>EVENT_ID)</span></code></pre></div>
-<pre><code>## [1] 237</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>emtala_facilities <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/processed/facility_summary.csv&quot;</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>emtala_facilities <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>  <span class="fu">count</span>(Rural.Status)</span></code></pre></div>
+<pre><code>##   Rural.Status   n
+## 1           No 165
+## 2          Yes 129
+## 3         &lt;NA&gt;  95</code></pre>
 
 </body>
 </html>
