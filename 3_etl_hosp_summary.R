@@ -5,9 +5,10 @@ library(dplyr)
 library(stringr)
 library(writexl)
 
-
 emtala_pregnant <- read_xlsx("data/manual/confirmed_pregnant.xlsx")
 
+# Convert facility_id to character str
+emtala_pregnant$facility_id <- as.character(emtala_pregnant$facility_id)
 # GroupBy facility_id
 by_facility <- emtala_pregnant %>%
      group_by(facility_id) %>% 
@@ -20,4 +21,10 @@ by_facility_lim_cols <- by_facility %>% dplyr:: select(all_of(cols_to_keep))
 
 # Remove duplicates
 by_facility_lim_cols_drop_dup <- distinct(by_facility_lim_cols)
-write.csv(by_facility_lim_cols_drop_dup, "data/source/facility_summary.csv")
+
+rural_urban <- read_xlsx("data/source/Data_Explorer_Dataset--hrsa_hcs_mua.xlsx")
+rural_urban <- rural_urban %>% dplyr:: select("Provider #", "Rural Status")
+
+by_facility_rural_urban <- left_join(by_facility_lim_cols_drop_dup, rural_urban, by = c("facility_id" = "Provider #"))
+
+write.csv(by_facility_rural_urban, "data/source/facility_summary.csv")

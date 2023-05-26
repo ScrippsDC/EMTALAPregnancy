@@ -96,19 +96,13 @@ Web: "Our investigation found of the cases that were investigated by CMS, at lea
 
 ```{r}
 # I added "turnaway" as a column in confirmed_pregnant.xlsx
-emtala_pregnant <- read_xlsx("data/manual/confirmed_pregnant.xlsx")
 turnaway <- emtala_pregnant %>% filter(turnaway == TRUE)
 n_distinct(turnaway$EVENT_ID)
 ```
 
 ```{r}
-
-turnaway <- read_xlsx("data/processed/turnaway.xlsx")
-turnaway_y <- turnaway %>%
-  filter(turnaway == "Y")
- 
-
-n_distinct(turnaway_y$EVENT_ID)
-
+emtala_facilities <- read.csv("data/processed/facility_summary.csv")
+emtala_facilities %>%
+  count(Rural.Status)
 ```
 
