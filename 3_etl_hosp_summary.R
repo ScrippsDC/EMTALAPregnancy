@@ -9,6 +9,7 @@ emtala_pregnant <- read_xlsx("data/manual/confirmed_pregnant.xlsx")
 
 # Convert facility_id to character str
 emtala_pregnant$facility_id <- as.character(emtala_pregnant$facility_id)
+
 # GroupBy facility_id
 by_facility <- emtala_pregnant %>%
      group_by(facility_id) %>% 
@@ -27,4 +28,7 @@ rural_urban <- rural_urban %>% dplyr:: select("Provider #", "Rural Status")
 
 by_facility_rural_urban <- left_join(by_facility_lim_cols_drop_dup, rural_urban, by = c("facility_id" = "Provider #"))
 
-write.csv(by_facility_rural_urban, "data/source/facility_summary.csv")
+# Remove duplicates
+by_facility_rural_urban <- distinct(by_facility_rural_urban)
+
+write.csv(by_facility_rural_urban, "data/processed/facility_summary.csv")

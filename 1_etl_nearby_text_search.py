@@ -1,12 +1,18 @@
 import pandas, re
 
+
+# read comma-separated strings from file
+def read_csv_strs(path):
+    with open(path, 'r') as f:
+        return f.read().replace("'","").split(',')
+
 # Stop phrases @cimar methodology for detecting pregnant patients -- this is adding back in some of the generic 
 # uses of the word "pregnancy" that @rachgoldaz's methodology removed. But since we're only looking at text nearby
 # patient identifiers, we get fewer false positives.
-IGNORE_PHRASES_PASS_RC = ["pregnancy test","test for pregnancy","active labor act","active labor (sic) act","emergency medical treatment and active labor"]
+IGNORE_PHRASES_PASS_RC = read_csv_strs("data/manual/1_etl_stopphrases.txt")
 
 # Keywords for @cimar methodology for detecting pregnant patients
-KEYWORDS_RC = ['gravid','pregnan','eclampsia','caeserian',' c-section',' csection',' c section',' para ','gestation','water break','water broke','active labor','obstetr']
+KEYWORDS_RC = read_csv_strs("data/manual/1_etl_keywords.txt")
 
 # EMTALA deficiency codes: (2400, 2401, 2402, 2403, 2404, 2405, 2406, 2407, 2408, 2409, 2410, 2411)
 EMTALA_RANGE = range(2400,2412)

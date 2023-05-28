@@ -1,5 +1,5 @@
 ---
-title: "cms_hospital_deficiency"
+title: "Analysis"
 author: "Rachel Gold"
 date: '2022-07-12'
 output: github_document
@@ -43,7 +43,7 @@ Script: “OUR SCRIPPS NEWS INVESTIGATION FOUND IT IS AMONG 389 HOSPITALS (FC) A
 
 ## Violation count
 
-Web: “racking up at least 675 federal violations since 2011.” 
+Web: “racking up at least 683 federal violations since 2011.” 
 ```{r}
 facility_count<-n_distinct(emtala_pregnant$facility_id)
 

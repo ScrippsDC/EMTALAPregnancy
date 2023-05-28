@@ -1,128 +1,56 @@
-# EMTALA_PREGNANCY
+# Scripps News Pregnant in the ER Methodological Notes
 
----
-title: "cms_hospital_deficiency"
-author: "Rachel Gold"
-date: '2022-07-12'
-contact: "rachel.goldaz@gmail.com""
-output: html_document
-editor_options: 
-  markdown: 
-    wrap: 72
----
+This repository contains code to reproduce the findings featured in the Scripps News investigation ["STORY HEADLINE"](https://www.scripps.org/news_items/STORY-URL), by BYLINES, published on DATE.
 
-## Scripps News Pregnant in the ER Methodological Notes
+The analysis document ([analysis.md]("analysis.md")) contains the code used to produce all the findings in our investigation. We based these findings off ([EMTALA_pregnancy database]("data/manual/confirmed_pregnant.xlsx")) -- several hundred EMTALA violations involving pregnant patients. We outline the steps we took to clean, extract, and validate this data in the section below.
 
-Scripps News based this investigation on data Rachel Gold, Scripps News data reporter, publicly obtained through the Centers for Medicare and Medicaid Services (CMS) Hospitals website. The data is a list of deficiencies in which hospitals have violated CMS Conditions of Participation (CoP), including the Emergency Medical Treatment and Labor Act (EMTALA).
+## Source Data
 
-Enforcing EMTALA is primarily a complaint-driven system, leaving the burden of reporting violations in the hands of patients and hospital staff. 
+Scripps News based this investigation on data Rachel Gold, Scripps News data reporter, obtained through the [Centers for Medicare and Medicaid Services (CMS) Hospitals website]("LINK"). The data is a list of deficiencies in which hospitals have violated CMS Conditions of Participation (CoP), including the Emergency Medical Treatment and Labor Act (EMTALA).
 
-At the time of our analysis, the data contained rows of violations from January 1, 2011 to September 30, 2022 from short-term, critical access and psychiatric hospitals in all 50 states. Each violation has a unique identifier, EVENT_ID, that groups together violations within the same investigation. One investigation (EVENT_ID) may have multiple violations. The dataset labels each violation with a deficiency tag that correlates to the specific CMS Condition of Participation violated within the investigation.
+EMTALA enforcement is primarily a complaint-driven system, leaving the burden of reporting violations in the hands of patients and hospital staff. 
 
-Scripps News reporters limited their analysis to short-term and critical access hospitals (as opposed to psychiatric hospitals) because reporters agreed pregnant patients experiencing medical emergencies were most likely to go to short-term and critical access hospitals for care.
+At the time of our analysis, the data contained violations from January 1, 2011 to September 30, 2022 from short-term, critical access and psychiatric hospitals in all 50 states. Each violation has an identifier, EVENT_ID, that groups together violations within the same investigation. One investigation (EVENT_ID) may have multiple violations. The dataset labels each violation with a deficiency tag that correlates to the specific CMS Condition of Participation violated within the investigation.
+
+## Data cleaning and extraction
+
+Scripps News reporters used the following steps to clean and extract the data:
+
+* [0_etl_simple_text_search.R]("0_etl_simple_text_search.R") -- Our first pass at trying to identify EMTALA violations involving pregnant patients.
+* [1_etl_nearby_text_search.py]("1_etl_nearby_text_search.py") -- A slightly differnt method of identifying EMTALA violations involving pregnant patients.
+* [2_etl_combined.py]("2_etl_combined.py") -- Combining the results of the first two methods.
+* Manual review for pregnancy -- Scripps News reporters manually reviewed each captured violation to determine if it did in fact involve a pregnant patient. Reporters also manually tagged violations involving pregnant patients being turned away. ([EMTALA_pregnancy database]("data/manual/confirmed_pregnant.xlsx"))
+* [3_etl_hospital_summary.R]("3_etl_hospital_summary.R") -- Creates a hospital-level (as opposed to violation-level) summary of the data, for use in graphics.
 
 Scripps News reporters' main goal was to capture any EMTALA violations that involved a pregnant patient. EMTALA violations are cataloged by deficiency tags 2400 through 2411. Reporters filtered the dataset for all violations with EMTALA deficiency tags.
 
-Each violation includes an inspection text, a detailed note of the violation. This text tells the story of the patient including a patient identifier, the medical complaint, a timeline of events, interviews with medical professionals and any policies relating to the violation. Any identifying patient or medical professional information was heavily redacted.
+Each violation includes an inspection text, which is a detailed note of the violation. This text tells the story of the patient and includes a patient identifier, the medical complaint, a timeline of events, interviews with medical professionals, and any policies relating to the violation. Any identifying patient or medical professional information was heavily redacted.
 
-## Capturing EMTALA Violations Involving Pregnant Patients
+### Simple text search
 
-Scripps News reporters realized capturing violations involving a pregnant patient would require three separate keyword searches. The reasons were two-fold:
+The code for this step is in 0_etl_simple_text_search.R.
 
-The inspection text included hospital policies regarding pregnant patients but the patient within the violation was not pregnant. Reporters did not want to capture these violations.
+Rachel Gold headed up trying to identify violations against pregnant patients, by searching the whole inspection text for certain keywords. This is complicated for two reasons: 
 
-Inspection texts identified a pregnant patient using a variety of descriptors relating to pregnancy or obstetrics.
+(1) A violation's inspection text often includes language _about_ pregnancy, even if the patient themselves was not pregnant. Sometimes a patient would come in with a broken leg, and the inspection text would describe their broken leg, and then go on to quote from a section of EMTALA that mentions pregnant patients.
 
-## Keyword Search
+(2) There are a wide variety of descriptors relating to pregnancy or obstetrics. Not every pregnant patient is described as "pregnant" -- sometimes a patient "was in labor" or at a certain number of "weeks gestation," to name just a couple.
 
-Scripps News reporters found the following key words were more likely to improperly capture violations describing hospital policies for pregnant patients but the patient within the violation was not pregnant. Reporters replaced these key words with blank spaces within the inspection text:
+Rachel Gold identified 26 specific keywords and phrases ([0_etl_keywords.txt]("data/manual/0_etl_keywords.txt")) that were likely to indicate a pregnant patient.
 
-| Phrases that Improperly Captured EMTALA Violations                                                                                                                                                                                                                                                                                                                         |
-|------------------------------------------------------------------------|
-| `A minor who understands the nature and consequences of treatment is capable of consenting if the minor is 18 years of age or older, graduated from high school, has married, has been pregnant, needs diagnosis or treatment of pregnancy or venereal disease, or is 14 years of age or older and requests psychiatric treatment` |
-| `A preterm or premature baby is delivered before 37 weeks of the pregnancy`                                                                                                                                                                                                                                                        |
-| `An evaluation sufficient to determine if an emergency medical condition or pregnancy with contractions existsAn evaluation sufficient to determine if an emergency medical condition or pregnancy with contractions exists`                                                                                                       |
-| `Abdominal pain - any female of childbearing age requiring diagnostic testing to determine pregnancy`                                                                                                                                                                                                                              |
-| `abdominal pain, vaginal bleeding`                                                                                                                                                                                                                                                                                                 |
-| `citizenship, religion, pregnancy`                                                                                                                                                                                                                                                                                                 |
-| `complaint is non-pregnancy related`                                                                                                                                                                                                                                                                                               |
-| `complaints were not related to pregnancy`                                                                                                                                                                                                                                                                                         |
-| `discussion with prophylaxis against pregnancy`                                                                                                                                                                                                                                                                                    |
-| `rug screen, Urine, pregnancy`                                                                                                                                                                                                                                                                                                     |
-| `during her pregnancy could be assessed for labor by a labor and delivery nurse except for pregnancy`                                                                                                                                                                                                                              |
-| `hospital does not do ultrasounds except for pregnancy`                                                                                                                                                                                                                                                                            |
-| `If an emergency medical condition or pregnancy with contractions is present, the hospital must provide such additional medical examination and treatment`                                                                                                                                                                         |
-| `In pregnancy at-term, stabilization includes delivery of the child and the placenta`                                                                                                                                                                                                                                              |
-| `medical condition, and /or pregnancy within its capabilities`                                                                                                                                                                                                                                                                     |
-| `medical screening examinations for patients with pregnancy-related conditions under standardized procedures`                                                                                                                                                                                                                      |
-| `no intrauterine pregnancy`                                                                                                                                                                                                                                                                                                        |
-| `possible EMCs related to pregnancy`                                                                                                                                                                                                                                                                                               |
-| `policy when presenting unscheduled for pregnancy related emergency care`                                                                                                                                                                                                                                                          |
-| `pregnancy/active labor`                                                                                                                                                                                                                                                                                                           |
-| `pregnancy test`                                                                                                                                                                                                                                                                                                                   |
-| `presenting to ED with pregnancy greater than 20 weeks`                                                                                                                                                                                                                                                                            |
-| `relates to pregnancy`                                                                                                                                                                                                                                                                                                             |
-| `someone in need of emergency care for a psychiatric or pregnancy-relations condition`                                                                                                                                                                                                                                             |
-| `treatment based on how far along they were in their pregnancy`                                                                                                                                                                                                                                                                    |
-| `urine pregnancy`                                                                                                                                                                                                                                                                                                                  |
-| `urine pregnancy test if potential for pregnancy`                                                                                                                                                                                                                                                                                  |
-| `urine test for pregnancy`                                                                                                                                                                                                                                                                                                         |
-| `Using screen for pregnancy`                                                                                                                                                                                                                                                                                                       |
-| `without pregnancy','pregnancy and childbirth`                                                                                                                                                                                                                                                                                     |
+To deal with the problem of false positives, she also identified 29 "stop phrases" ([0_etl_stopphrases.txt]("data/manual/0_etl_stopphrases.txt")) that mention those keywords but are unlikely to describe a pregnant patient on their own (e.g. if the only time the word "pregnancy" appears in the inspection text is in the phrase "complaints were not related to pregnancy", we ignore it). This is done by replacing all stop phrases with an empty string before searching the inspection text for keywords.
 
-Reporters used the following key words to search for and capture any violations involving pregnant patients:
+Fine-tuning these keywords and stop phrases involved a lot of trial and error. Rachel Gold would run the code, manually review a sample of the results, and then add or remove key words and stop phrases as needed.
 
-| Keyword Phrases               |
-|-------------------------------|
-| `currently pregnant`          |
-| `gestational age`             |
-| `leaking amniotic fluid`      |
-| `miscarried`                  |
-| `months gestation`            |
-| `months pregnant`             |
-| `pregnancy`                   |
-| `she was pregnant`            |
-| `stillborn`                   |
-| `water breaking`              |
-| `water broke`                 |
-| `water had broken`            |
-| `was born`                    |
-| `was in active labor`         |
-| `was in labor`                |
-| `was noticeably pregnant`     |
-| `was pregnant`                |
-| `wks (weeks)`                 |
-| `weeks pregnant`              |
-| `week pregnant`               |
-| `weeks of pregnancy`          |
-| `wks (weeks) preg (pregnant)` |
-| `weeks gestation`             |
-| `weeks' gestation`            |
-| `weeks with labor`            |
-| `year old pregnant`           |
+### Nearby text search
 
-Reporters captured any violations where the following words appeared 100 characters before or 200 characters after the patient identifier:
+The code for this step is in 1_etl_nearby_text_search.py.
 
-| Keyword Phrases |
-|----------------|
-| `active labor` |
-| `c section`    |
-| `c-section`    |
-| `csection`     |
-| `caeserian`    |
-| `eclampsia`    |
-| `gestation`    |
-| `gravid`       |
-| `obstetr`      |
-| `para`         |
-| `pregnan`      |
-| `water break`  |
-| `water broke`  |
+After some manual review of the results returned by the simple text search, data editor Rosie Cima noticed the inspection text field had some structure we could be using to our advantage. Patients were often identified by an alias like "Patient #13", or "Patient Identifier 7", or "PI 4". This was often followed by a description of the patient's complaint, and then a timeline of events.
 
-For accuracy, Scripps News reporters manually reviewed each captured violation to determine if it involved a pregnant patient. After manual review, the resulting EMTALA_pregnancy database included 683 violations that totaled 417 investigations within 389 hospitals.
+Rosie wrote some code to do the same kind of keyword search as in the previous step, but only in the text surrounding the patient identifier -- either in the same paragraph as it, or a certain number of characters before or after. Because we were searching a more targeted text field, we were able to use more general key words phrases and fewer stop phrases. ([1_etl_keywords.txt]("data/manual/1_etl_keywords.txt") and [1_etl_stopphrases.txt]("data/manual/1_etl_stopphrases.txt"))
 
-Reporters used the EMTALA_pregnancy database for additional analysis and findings within the investigation.
+### Manual review for pregnant patients and turn-aways
+For accuracy, Scripps News reporters manually reviewed _every violation_ captured by either of the steps above to determine if it actually involved a pregnant patient. After manual review, the resulting [EMTALA_pregnancy database]("data/manual/confirmed_pregnant.xlsx") included 683 violations that totaled 417 investigations within 389 hospitals. 
 
-## Hospitals Turning Away Pregnant Patients
-
-Scripps News Reporters manually reviewed every captured EMTALA violation of inappropriate transfer, lack of medical screening exam and lack of stabilization within our EMTALA pregnancy database. These violations are the most serious because they pose the greatest health risk if violated and can be potentially life-threatening. Scripps News determined whether a pregnant patient was turned away from the emergency department if the patient sought care and was not able to receive it. Reporters found at least 241 investigations of patients being turned away.
+Scripps News Reporters then also manually reviewed every case of inappropriate transfer, lack of medical screening exam, and lack of stabilization within our EMTALA pregnancy database. These violations are the most serious because they pose the greatest health risk if violated and can be potentially life-threatening. Scripps News determined whether a pregnant patient was turned away from the emergency department if the patient sought care and was not able to receive it. Reporters found at least 241 investigations of patients being turned away.
