@@ -32,9 +32,9 @@ The code for this step is in 0_etl_simple_text_search.R.
 
 Rachel Gold headed up trying to identify violations against pregnant patients, by searching the whole inspection text for certain keywords. This is complicated for two reasons: 
 
-(1) A violation's inspection text often includes language _about_ pregnancy, even if the patient themselves was not pregnant. Sometimes a patient would come in with a broken leg, and the inspection text would describe their broken leg, and then go on to quote from a section of EMTALA that mentions pregnant patients.
+1) A violation's inspection text often includes language _about_ pregnancy, even if the patient themselves was not pregnant. Sometimes a patient would come in with a broken leg, and the inspection text would describe their broken leg, and then go on to quote from a section of EMTALA that mentions pregnant patients.
 
-(2) There are a wide variety of descriptors relating to pregnancy or obstetrics. Not every pregnant patient is described as "pregnant" -- sometimes a patient "was in labor" or at a certain number of "weeks gestation," to name just a couple.
+2) There are a wide variety of descriptors relating to pregnancy or obstetrics. Not every pregnant patient is described as "pregnant" -- sometimes a patient "was in labor" or at a certain number of "weeks gestation," to name just a couple.
 
 Rachel Gold identified 26 specific keywords and phrases ([0_etl_keywords.txt]("data/manual/0_etl_keywords.txt")) that were likely to indicate a pregnant patient.
 
