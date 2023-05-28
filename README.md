@@ -19,7 +19,7 @@ Scripps News reporters used the following steps to clean and extract the data:
 * [0_etl_simple_text_search.R]("0_etl_simple_text_search.R") -- Our first pass at trying to identify EMTALA violations involving pregnant patients.
 * [1_etl_nearby_text_search.py]("1_etl_nearby_text_search.py") -- A slightly differnt method of identifying EMTALA violations involving pregnant patients.
 * [2_etl_combined.py]("2_etl_combined.py") -- Combining the results of the first two methods.
-* **Manual review** -- Reporters manually reviewed each captured violation to determine if it did in fact involve a pregnant patient. Reporters also manually tagged violations involving pregnant patients being turned away from care. ([EMTALA_pregnancy database]("data/manual/confirmed_pregnant.xlsx"))
+* **Manual review** -- Reporters manually reviewed each captured violation to determine if it did in fact involve a pregnant patient, and then reviewed those for cases of patients being turned away from care. ([EMTALA_pregnancy database]("data/manual/confirmed_pregnant.xlsx"))
 * [3_etl_hospital_summary.R]("3_etl_hospital_summary.R") -- Creates a hospital-level (as opposed to violation-level) summary of the data, for use in graphics.
 
 Scripps News reporters' main goal was to capture any EMTALA violations that involved a pregnant patient. EMTALA violations are catalogued by deficiency tags 2400 through 2411. Reporters filtered the dataset for all violations with EMTALA deficiency tags.
