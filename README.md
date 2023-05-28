@@ -19,12 +19,12 @@ Scripps News reporters used the following steps to clean and extract the data:
 * [0_etl_simple_text_search.R]("0_etl_simple_text_search.R") -- Our first pass at trying to identify EMTALA violations involving pregnant patients.
 * [1_etl_nearby_text_search.py]("1_etl_nearby_text_search.py") -- A slightly differnt method of identifying EMTALA violations involving pregnant patients.
 * [2_etl_combined.py]("2_etl_combined.py") -- Combining the results of the first two methods.
-* Manual review for pregnancy -- Scripps News reporters manually reviewed each captured violation to determine if it did in fact involve a pregnant patient. Reporters also manually tagged violations involving pregnant patients being turned away. ([EMTALA_pregnancy database]("data/manual/confirmed_pregnant.xlsx"))
+* *Manual review* -- Reporters manually reviewed each captured violation to determine if it did in fact involve a pregnant patient. Reporters also manually tagged violations involving pregnant patients being turned away from care. ([EMTALA_pregnancy database]("data/manual/confirmed_pregnant.xlsx"))
 * [3_etl_hospital_summary.R]("3_etl_hospital_summary.R") -- Creates a hospital-level (as opposed to violation-level) summary of the data, for use in graphics.
 
-Scripps News reporters' main goal was to capture any EMTALA violations that involved a pregnant patient. EMTALA violations are cataloged by deficiency tags 2400 through 2411. Reporters filtered the dataset for all violations with EMTALA deficiency tags.
+Scripps News reporters' main goal was to capture any EMTALA violations that involved a pregnant patient. EMTALA violations are catalogued by deficiency tags 2400 through 2411. Reporters filtered the dataset for all violations with EMTALA deficiency tags.
 
-Each violation includes an inspection text, which is a detailed note of the violation. This text tells the story of the patient and includes a patient identifier, the medical complaint, a timeline of events, interviews with medical professionals, and any policies relating to the violation. Any identifying patient or medical professional information was heavily redacted.
+Each violation includes an inspection text, which is a detailed note on the violation. This text can include a patient identifier, their medical complaint(s), a timeline of events, interviews with medical professionals, and policies relating to the violation. Any information personally identifying the patient or medical professional is heavily redacted.
 
 ### Simple text search
 
@@ -46,9 +46,9 @@ Fine-tuning these keywords and stop phrases involved a lot of trial and error. R
 
 The code for this step is in 1_etl_nearby_text_search.py.
 
-After some manual review of the results returned by the simple text search, data editor Rosie Cima noticed the inspection text field had some structure we could be using to our advantage. Patients were often identified by an alias like "Patient #13", or "Patient Identifier 7", or "PI 4". This was often followed by a description of the patient's complaint, and then a timeline of events.
+After some manual review of the results returned by the simple text search, data editor Rosie Cima noticed the inspection text field was somewhat structured. Patients were often identified by an alias like "Patient #13", or "Patient Identifier 7", or "PI 4". This was often followed by a description of the patient's complaint, and then a timeline of events.
 
-Rosie wrote some code to do the same kind of keyword search as in the previous step, but only in the text surrounding the patient identifier -- either in the same paragraph as it, or a certain number of characters before or after. Because we were searching a more targeted text field, we were able to use more general key words phrases and fewer stop phrases. ([1_etl_keywords.txt]("data/manual/1_etl_keywords.txt") and [1_etl_stopphrases.txt]("data/manual/1_etl_stopphrases.txt"))
+Rosie wrote some code to do the same kind of keyword search as in the previous step, but _only_ in the text surrounding the patient identifier -- either in the same paragraph as it, or a certain number of characters before or after. Because we were searching a more targeted text field, we were able to use more general key words phrases and fewer stop phrases. ([1_etl_keywords.txt]("data/manual/1_etl_keywords.txt") and [1_etl_stopphrases.txt]("data/manual/1_etl_stopphrases.txt"))
 
 ### Manual review for pregnant patients and turn-aways
 For accuracy, Scripps News reporters manually reviewed _every violation_ captured by either of the steps above to determine if it actually involved a pregnant patient. After manual review, the resulting [EMTALA_pregnancy database]("data/manual/confirmed_pregnant.xlsx") included 683 violations that totaled 417 investigations within 389 hospitals. 
