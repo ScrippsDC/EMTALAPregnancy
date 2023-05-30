@@ -47,7 +47,7 @@ emtala_all <- read_xlsx("data/processed/0_etl_all_emtala_deficiencies.xlsx")
 
 Web: “Our investigation found 389 hospitals spanning 44 states have
 violated EMTALA statutes while attending to pregnant patients, racking
-up at least 675 federal violations since 2011.”
+up at least 683 federal violations since 2011.”
 
 Script: “OUR SCRIPPS NEWS INVESTIGATION FOUND IT IS AMONG 389 HOSPITALS
 (FC) AROUND THE COUNTRY REPONSIBLE FOR NEARLY 700 VIOLATIONS OF THE
@@ -197,7 +197,7 @@ Web: “EMTALA violations involving pregnancy \[…\] included small
 hospitals and large ones, in both rural and urban areas.”
 
 ``` r
-emtala_facilities <- read.csv("data/processed/facility_summary.csv")
+emtala_facilities <- read.csv("data/processed/3_etl_facility_summary.csv")
 emtala_facilities %>%
   count(Rural.Status)
 ```

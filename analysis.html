@@ -632,7 +632,7 @@ Rodriguez for whether they, in fact, pertained to pregnant patients.</p>
 <h2 id="hospital-counts-features">Hospital counts, features</h2>
 <p>Web: “Our investigation found 389 hospitals spanning 44 states have
 violated EMTALA statutes while attending to pregnant patients, racking
-up at least 675 federal violations since 2011.”</p>
+up at least 683 federal violations since 2011.”</p>
 <p>Script: “OUR SCRIPPS NEWS INVESTIGATION FOUND IT IS AMONG 389
 HOSPITALS (FC) AROUND THE COUNTRY REPONSIBLE FOR NEARLY 700 VIOLATIONS
 OF THE EMERGENCY MEDICAL TREATMENT AND LABOR ACT – OR EMTALA”</p>
@@ -736,7 +736,7 @@ being turned away.”</p>
 <h2 id="rural-vs-urban">Rural vs. urban</h2>
 <p>Web: “EMTALA violations involving pregnancy […] included small
 hospitals and large ones, in both rural and urban areas.”</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>emtala_facilities <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/processed/facility_summary.csv&quot;</span>)</span>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>emtala_facilities <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/processed/3_etl_facility_summary.csv&quot;</span>)</span>
 <span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>emtala_facilities <span class="sc">%&gt;%</span></span>
 <span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>  <span class="fu">count</span>(Rural.Status)</span></code></pre></div>
 <pre><code>##   Rural.Status   n
