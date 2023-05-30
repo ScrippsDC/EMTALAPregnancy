@@ -31,4 +31,4 @@ by_facility_rural_urban <- left_join(by_facility_lim_cols_drop_dup, rural_urban,
 # Remove duplicates
 by_facility_rural_urban <- distinct(by_facility_rural_urban)
 
-write.csv(by_facility_rural_urban, "data/processed/facility_summary.csv")
+write.csv(by_facility_rural_urban, "data/processed/3_etl_facility_summary.csv")
