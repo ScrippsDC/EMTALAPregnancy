@@ -107,6 +107,8 @@ Web: "Our investigation found of the cases that were investigated by CMS, at lea
 # I added "turnaway" as a column in confirmed_pregnant.xlsx
 turnaway <- emtala_pregnant %>% filter(turnaway == TRUE)
 n_distinct(turnaway$EVENT_ID)
+
+n_distinct(turnaway$facility_id)
 ```
 
 ## Rural vs. urban

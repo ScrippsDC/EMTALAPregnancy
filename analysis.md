@@ -1,4 +1,4 @@
-cms_hospital_deficiency
+Analysis
 ================
 Rachel Gold
 2022-07-12
@@ -55,7 +55,7 @@ EMERGENCY MEDICAL TREATMENT AND LABOR ACT – OR EMTALA”
 
 ## Violation count
 
-Web: “racking up at least 675 federal violations since 2011.”
+Web: “racking up at least 683 federal violations since 2011.”
 
 ``` r
 facility_count<-n_distinct(emtala_pregnant$facility_id)
@@ -184,6 +184,12 @@ n_distinct(turnaway$EVENT_ID)
 ```
 
     ## [1] 241
+
+``` r
+n_distinct(turnaway$facility_id)
+```
+
+    ## [1] 232
 
 ## Rural vs. urban
 

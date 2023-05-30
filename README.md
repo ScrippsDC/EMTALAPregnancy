@@ -48,9 +48,13 @@ The code for this step is in 1_etl_nearby_text_search.py.
 
 After some manual review of the results returned by the simple text search, data editor Rosie Cima noticed the inspection text field was somewhat structured. Patients were often identified by an alias like "Patient #13", or "Patient Identifier 7", or "PI 4". This was often followed by a description of the patient's complaint, and then a timeline of events.
 
-Rosie wrote some code to do the same kind of keyword search as in the previous step, but _only_ in the text surrounding the patient identifier -- either in the same paragraph as it, or a certain number of characters before or after. Because we were searching a more targeted text field, we were able to use more general key words phrases and fewer stop phrases. ([1_etl_keywords.txt]("data/manual/1_etl_keywords.txt") and [1_etl_stopphrases.txt]("data/manual/1_etl_stopphrases.txt"))
+Rosie wrote some code to do the same kind of keyword search as in the previous step, but _only_ in the text surrounding the patient identifier -- either in the same paragraph as it, or a certain number of characters before or after. Because we were searching a more targeted text field, we were able to use more general key words and phrases ([1_etl_keywords.txt]("data/manual/1_etl_keywords.txt") and fewer stop phrases [1_etl_stopphrases.txt]("data/manual/1_etl_stopphrases.txt"))
 
 ### Manual review for pregnant patients and turn-aways
-For accuracy, Scripps News reporters manually reviewed _every violation_ captured by either of the steps above to determine if it actually involved a pregnant patient. After manual review, the resulting [EMTALA_pregnancy database]("data/manual/confirmed_pregnant.xlsx") included 683 violations that totaled 417 investigations within 389 hospitals. 
+For accuracy, Scripps News reporters manually reviewed _every violation_ captured by the steps above to determine if it actually involved a pregnant patient. After manual review, the resulting [EMTALA_pregnancy database]("data/manual/confirmed_pregnant.xlsx") included 683 violations that totaled 417 investigations within 389 hospitals. 
 
-Scripps News Reporters then also manually reviewed every case of inappropriate transfer, lack of medical screening exam, and lack of stabilization within our EMTALA pregnancy database. These violations are the most serious because they pose the greatest health risk if violated and can be potentially life-threatening. Scripps News determined whether a pregnant patient was turned away from the emergency department if the patient sought care and was not able to receive it. Reporters found at least 241 investigations of patients being turned away.
+Scripps News Reporters then also manually reviewed every case of inappropriate transfer, lack of medical screening exam, and lack of stabilization within our EMTALA pregnancy database. These violations are the most serious because they pose the greatest health risk if violated and can be potentially life-threatening. 
+
+Scripps News determined whether a pregnant patient was turned away from the emergency department if the patient sought care and was not able to receive it. 
+
+Reporters found at least 241 investigations of patients being turned away.
