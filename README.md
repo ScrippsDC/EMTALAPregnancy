@@ -6,7 +6,7 @@ The analysis document ([analysis.md]("analysis.md")) contains the code used to p
 
 ## Source Data
 
-Scripps News based this investigation on data Rachel Gold, Scripps News data reporter, obtained through the [Centers for Medicare and Medicaid Services (CMS) Hospitals website](LINK). The data is a list of deficiencies in which hospitals have violated CMS Conditions of Participation (CoP), including the Emergency Medical Treatment and Labor Act (EMTALA).
+Scripps News based this investigation on data Rachel Gold, Scripps News data reporter, obtained through the [Centers for Medicare and Medicaid Services (CMS) Hospitals website](https://www.cms.gov/Medicare/Provider-Enrollment-and-Certification/CertificationandComplianc/Hospitals). The data -- "Full Text Statements of Deficiencies Hospital Surveys" -- is a list of deficiencies in which hospitals have violated CMS Conditions of Participation (CoP), including the Emergency Medical Treatment and Labor Act (EMTALA).
 
 EMTALA enforcement is primarily a complaint-driven system, leaving the burden of reporting violations in the hands of patients and hospital staff. 
 
@@ -20,7 +20,8 @@ Scripps News reporters used the following steps to clean and extract the data:
 * [1_etl_nearby_text_search.py](1_etl_nearby_text_search.py) -- A slightly differnt method of identifying EMTALA violations involving pregnant patients.
 * [2_etl_combined.py](2_etl_combined.py) -- Combining the results of the first two methods.
 * **Manual review** -- Reporters manually reviewed each captured violation to determine if it did in fact involve a pregnant patient, and then reviewed those for cases of patients being turned away from care. ([EMTALA_pregnancy database](data/manual/confirmed_pregnant.xlsx))
-* [3_etl_hospital_summary.R](3_etl_hospital_summary.R) -- Creates a hospital-level (as opposed to violation-level) summary of the data, for use in graphics.
+* [3_etl_hospital_summary.R](3_etl_hospital_summary.R) -- Creates a hospital-level (as opposed to violation-level) summary of the data.
+* [4_etl_geocode_hosp.py](4_etl_geocode_hosp.py) -- Geocode the hospitals for mapping, for use in graphics.
 
 Scripps News reporters' main goal was to capture any EMTALA violations that involved a pregnant patient. EMTALA violations are catalogued by deficiency tags 2400 through 2411. Reporters filtered the dataset for all violations with EMTALA deficiency tags.
 
@@ -53,7 +54,7 @@ Rosie wrote some code to do the same kind of keyword search as in the previous s
 ### Manual review for pregnant patients and turn-aways
 For accuracy, Scripps News reporters manually reviewed _every violation_ captured by the steps above to determine if it actually involved a pregnant patient. After manual review, the resulting [EMTALA_pregnancy database](data/manual/confirmed_pregnant.xlsx) included 683 violations that totaled 417 investigations within 389 hospitals. 
 
-Scripps News Reporters then also manually reviewed inappropriate transfer (disposition #), lack of medical screening exam (#), and lack of stabilization (#) violation within our EMTALA pregnancy database. These violations are the most serious because they pose the greatest health risk if violated and can be potentially life-threatening. 
+Scripps News Reporters then also manually reviewed every inappropriate transfer (disposition #), lack of medical screening exam (#), and lack of stabilization (#) violation within our EMTALA pregnancy database. These violations are the most serious because they pose the greatest health risk if violated and can be potentially life-threatening. 
 
 For each of these violations, Scripps News determined whether a pregnant patient was turned away from the emergency department. We defined a patient as "turned away" if the patient sought care and was not able to receive it, like the woman interviewed in our piece, who ended up giving birth in her car on the side of the road. 
 
