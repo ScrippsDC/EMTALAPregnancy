@@ -54,7 +54,7 @@ Rosie wrote some code to do the same kind of keyword search as in the previous s
 ### Manual review for pregnant patients and turn-aways
 For accuracy, Scripps News reporters manually reviewed _every violation_ captured by the steps above to determine if it actually involved a pregnant patient. After manual review, the resulting [EMTALA_pregnancy database](data/manual/confirmed_pregnant.xlsx) included 683 violations that totaled 417 investigations within 389 hospitals. 
 
-Scripps News Reporters then also manually reviewed every inappropriate transfer (disposition #), lack of medical screening exam (#), and lack of stabilization (#) violation within our EMTALA pregnancy database. These violations are the most serious because they pose the greatest health risk if violated and can be potentially life-threatening. 
+Scripps News Reporters then also manually reviewed every inappropriate transfer (disposition 2409), lack of medical screening exam (2406), and lack of stabilization (2407) violation within our EMTALA pregnancy database. These violations are the most serious because they pose the greatest health risk if violated and can be potentially life-threatening. 
 
 For each of these violations, Scripps News determined whether a pregnant patient was turned away from the emergency department. We defined a patient as "turned away" if the patient sought care and was not able to receive it, like the woman interviewed in our piece, who ended up giving birth in her car on the side of the road. 
 
