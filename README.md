@@ -1,6 +1,6 @@
 # Scripps News Pregnant in the ER Methodological Notes
 
-This repository contains code to reproduce the findings featured in the Scripps News investigation ["'We Don't Deliver Babies Here': Hospitals Turn Away Pregnant Patients"](https://www.scripps.org/news_items/STORY-URL), by Karen Rodriguez, Rachel Gold, Lori Jane Gliha, published on June 7, 2023.
+This repository contains code to reproduce the findings featured in the Scripps News investigation ["'We Don't Deliver Babies Here': Hospitals Turn Away Pregnant Patients"](https://www.scripps.org/news_items/STORY-URL), by Karen Rodriguez, Rachel Gold, Lori Jane Gliha, and Rosie Cima published on June 7, 2023.
 
 The analysis document ([analysis.md]("analysis.md")) contains the code used to produce all the findings in our investigation. We based these findings off ([EMTALA_pregnancy database](data/manual/confirmed_pregnant.xlsx)) -- several hundred EMTALA violations involving pregnant patients. We outline the steps we took to clean, extract, and validate this data in the section below.
 
