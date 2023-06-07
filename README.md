@@ -29,7 +29,7 @@ Each violation includes an inspection text, which is a detailed note on the viol
 
 ### Simple text search
 
-The code for this step is in 0_etl_simple_text_search.R.
+The code for this step is in [0_etl_simple_text_search.R](0_etl_simple_text_search.R).
 
 Rachel Gold headed up trying to identify violations against pregnant patients, by searching the whole inspection text for certain keywords. This is complicated for two reasons: 
 
@@ -45,7 +45,7 @@ Fine-tuning these keywords and stop phrases involved a lot of trial and error. R
 
 ### Nearby text search
 
-The code for this step is in 1_etl_nearby_text_search.py.
+The code for this step is in [1_etl_nearby_text_search.py](1_etl_nearby_text_search.py).
 
 After some manual review of the results returned by the simple text search, data editor Rosie Cima noticed the inspection text field was somewhat structured. Patients were often identified by an alias like "Patient #13", or "Patient Identifier 7", or "PI 4". This was often followed by a description of the patient's complaint, and then a timeline of events.
 
