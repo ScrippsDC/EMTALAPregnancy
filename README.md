@@ -47,7 +47,7 @@ Fine-tuning these keywords and stop phrases involved a lot of trial and error. R
 
 The code for this step is in [1_etl_nearby_text_search.py](1_etl_nearby_text_search.py).
 
-After some manual review of the results returned by the simple text search, data editor Rosie Cima noticed the inspection text field was somewhat structured. Patients were often identified by an alias like "Patient #13", or "Patient Identifier 7", or "PI 4". This was often followed by a description of the patient's complaint, and then a timeline of events.
+After some manual review of the results returned by the simple text search, data editor Rosie Cima noticed the inspection text field was somewhat structured. Patients were often identified by an alias like "Patient #13", or "Patient Identifier 7", or "PI 4", which was often followed by a description of the patient's complaint, and then a timeline of events.
 
 Rosie wrote some code to do the same kind of keyword search as in the previous step, but _only_ in the text surrounding the patient identifier -- either in the same paragraph as it, or a certain number of characters before or after. Because we were searching a more targeted text field, we were able to use more general key words and phrases ([1_etl_keywords.txt](data/manual/1_etl_keywords.txt) and fewer stop phrases [1_etl_stopphrases.txt](data/manual/1_etl_stopphrases.txt))
 
